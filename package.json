@@ -1,0 +1,25 @@
+{
+  "name": "fleauxlangsupport",
+  "displayName": "FleauxLangSupport",
+  "description": "Language support for FleauxLang DSL",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.87.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "fleaux",
+      "aliases": ["Fleaux", "fleaux"],
+      "extensions": [".fleaux"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "fleaux",
+      "scopeName": "source.fleaux",
+      "path": "./syntaxes/fleaux.tmLanguage.json"
+    }]
+  }
+}

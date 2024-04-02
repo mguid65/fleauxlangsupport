@@ -1,0 +1,242 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Fleaux",
+	"patterns": [
+		{
+			"include": "#comment"
+		},
+		{
+			"include": "#statements"
+		}
+	],
+	"repository": {
+		"comment": {
+			"patterns": [
+				{
+					"name": "comment.line.double-slash.fleaux",
+					"match": "//.*"
+				}
+			]
+		},
+		"statements": {
+			"patterns": [
+				{
+					"include": "#import_statement"
+				},
+				{
+					"include": "#let_statement"
+				},
+				{
+					"include": "#expression_statement"
+				}
+			]
+		},
+		"import_statement": {
+			"name": "import_stmt.fleaux",
+			"patterns": [
+				{
+					"match": "\\b(import)\\b\\s+([a-zA-Z][a-zA-Z0-9_]*)\\s*\\;(\\s*//.*)?",
+					"captures": {
+						"1": {
+							"name": "keyword.other.fleaux"
+						},
+						"3": {
+							"name": "comment.line.double-slash.fleaux"
+						}
+					}
+				}
+			]
+		},
+		"let_statement": {
+			"name": "let_stmt.fleaux",
+			"begin": "\\b(let)\\b\\s+(?:([a-zA-Z][a-zA-Z0-9_]*)\\.)?([a-zA-Z][a-zA-Z0-9_]*)\\s*\\(\\s*(.*)(?=\\)\\s*\\:)\\)\\s*\\:\\s*(.*)\\s*(\\:\\:|\\=)\\s*",
+			"end": "(.*)\\s*\\;(\\s*//.*)?",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.function.fleaux"
+				},
+				"2": {
+					"name": "entity.name.function.fleaux"
+				},
+				"3": {
+					"name": "entity.name.function.fleaux"
+				},
+				"4": {
+					"patterns": [
+						{
+							"include": "#parameter_list"
+						}
+					]
+				},
+				"5": {
+					"patterns": [
+						{
+							"include": "#type"
+						}
+					]
+				},
+				"6": {
+					"name": "keyword.operator.fleaux"
+				}
+			},
+			"endCaptures": {
+				"1": {
+					"patterns": [
+						{
+							"include": "#expression"
+						}
+					]
+				},
+				"2": {
+					"name": "comment.line.double-slash.fleaux"
+				}
+			}
+		},
+		"parameter_list": {
+			"name": "parameter_list.fleaux",
+			"begin": "\\s*([a-zA-Z][a-zA-Z0-9_]*)\\s*\\:\\s*([a-zA-Z][a-zA-Z0-9_]*(?:\\((.*)\\))?)(\\.\\.\\.)?",
+			"end": ".*",
+			"beginCaptures": {
+				"1": {
+					"name": "variable.other.fleaux"
+				},
+				"2": {
+					"patterns": [
+						{
+							"include": "#type"
+						}
+					]
+				},
+				"4": {
+					"name": "keyword.operator.fleaux"
+				}
+			},
+			"endCaptures": {
+				"0": {
+					"patterns": [
+						{
+							"include": "#parameter_list"
+						}
+					]
+				}
+			}
+		},
+		"type": {
+			"patterns": [
+				{
+					"match": "\\s*([a-zA-Z][a-zA-Z0-9_]*)(\\.\\.\\.)?",
+					"captures": {
+						"1": {
+							"name": "support.type.fleaux"
+						},
+						"2": {
+							"name": "keyword.operator.fleaux"
+						}
+					}
+				}
+			]
+		},
+		"expression_statement": {
+			"name": "expression_stmt.fleaux",
+			"begin": "^\\s*(?!\\blet\\b\\s+)(?!\\bimport\\b\\s+)(.*)\\;(\\s*//.*)?",
+			"end": ".*",
+			"beginCaptures": {
+				"1": {
+					"patterns": [
+						{
+							"include": "#expression"
+						}
+					]
+				},
+				"2": {
+					"name": "comment.line.double-slash.fleaux"
+				}
+			}
+		},
+		"expression": {
+			"name": "expression.fleaux",
+			"patterns": [
+				{
+					"include": "#constants"
+				},
+				{
+					"name": "pipeline_expression",
+					"match": "(?=\\-\\>)\\s*(\\-\\>)\\s*\\b(?:([a-zA-Z][a-zA-Z0-9_]*)\\b\\.)?\\b([a-zA-Z][a-zA-Z0-9_]*)\\b",
+					"captures": {
+						"1": {
+							"name": "keyword.operator.fleaux"
+						},
+						"2": {
+							"name": "entity.name.function.fleaux"
+						},
+						"3": {
+							"name": "entity.name.function.fleaux"
+						}
+					}
+				},
+				{
+					"name": "pipeline_expression",
+					"match": "(?=\\-\\>)\\s*(\\-\\>)\\s*(\\-(?!>)|\\+|\\*|\\/|\\%|\\|\\||\\&\\&|\\^|\\=\\=|\\!\\=|\\<|(?<!-)\\>|\\>\\=|\\<\\=|\\!|\\=|\\:\\:|\\.\\.\\.)",
+					"captures": {
+						"1": {
+							"name": "keyword.operator.fleaux"
+						},
+						"2": {
+							"name": "keyword.operator.fleaux"
+						}
+					}
+				},
+				{
+					"match": "(?!\\-\\>)\\s*\\b([a-zA-Z][a-zA-Z0-9_]*)\\b",
+					"name": "variable.other.fleaux"
+				},
+				{
+					"include": "#operators"
+				}
+			]
+		},
+		"operators": {
+			"patterns": [
+				{
+					"name": "keyword.operator.fleaux",
+					"match": "(\\-(?!>)|\\+|\\*|\\/|\\%|\\|\\||\\&\\&|\\^|\\=\\=|\\!\\=|\\<|(?<!-)\\>|\\>\\=|\\<\\=|\\!|\\=|\\:\\:|\\.\\.\\.)"
+				}
+			]
+		},
+		"keywords": {
+			"patterns": [
+				{
+					"name": "keyword.other.fleaux",
+					"match": "\\b(Number|String|Bool|Null|Any|Tuple|__builtin__)\\b"
+				}
+			]
+		},
+		"constants": {
+			"patterns": [
+				{
+					"name": "constant.language.fleaux",
+					"match": "\\b(true|false|null)\\b"
+				},
+				{
+					"include": "#strings"
+				},
+				{
+					"name": "constant.numeric.fleaux",
+					"match": "-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?"
+				}
+			]
+		},
+		"strings": {
+			"name": "string.quoted.double.fleaux",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.fleaux",
+					"match": "\\\\."
+				}
+			]
+		}
+	},
+	"scopeName": "source.fleaux"
+}
