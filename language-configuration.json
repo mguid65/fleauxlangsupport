@@ -15,8 +15,17 @@
         ["\"", "\""],
         ["'", "'"]
     ],
-    "indentationRules": {
-        "increaseIndentPattern": "^((?!\\/\\/).)*(\\{[^}\"'`]*|\\([^)\"'`]*|\\[[^\\]\"'`]*)$",
-        "decreaseIndentPattern": "^((?!.*?\\/\\*).*\\*/)?\\s*[\\)\\}\\]].*$"
-    }
+    "onEnterRules": [
+        {
+            "beforeText": "^.*;.*",
+            "action": {
+                "indent": "outdent"
+            }
+        },
+        {
+          "beforeText": "^[^\\s*].*",
+          "afterText": ".*;\\s*(?:\\s*//.*)?$",
+          "action": { "indent": "indent" }
+        }
+      ]
 }
